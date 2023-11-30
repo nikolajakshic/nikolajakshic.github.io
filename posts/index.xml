@@ -6,32 +6,41 @@
     <description>Recent content in Posts on Nikola Jakšić</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 17 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nikolajaksic.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 30 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nikolajaksic.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Sheet</title>
-      <link>https://nikolajaksic.com/posts/sheet/</link>
-      <pubDate>Fri, 17 Nov 2023 00:00:00 +0000</pubDate>
+      <title>Process Farewell</title>
+      <link>https://nikolajaksic.com/posts/process-farewell/</link>
+      <pubDate>Thu, 30 Nov 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://nikolajaksic.com/posts/sheet/</guid>
-      <description>Let&amp;rsquo;s check if this summary works</description>
+      <guid>https://nikolajaksic.com/posts/process-farewell/</guid>
+      <description>Process Farewell facilitates simulating system-initiated process death.</description>
     </item>
     
     <item>
-      <title>Cheat</title>
-      <link>https://nikolajaksic.com/posts/cheat/</link>
-      <pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate>
+      <title>Coroutines Cheat Sheet</title>
+      <link>https://nikolajaksic.com/posts/coroutines-cheat-sheet/</link>
+      <pubDate>Sun, 08 Oct 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://nikolajaksic.com/posts/cheat/</guid>
-      <description>Let&amp;rsquo;s check if this summary works</description>
+      <guid>https://nikolajaksic.com/posts/coroutines-cheat-sheet/</guid>
+      <description>How to use some of the most common coroutine builders and operators, and how to handle errors and cancellation.</description>
     </item>
     
     <item>
-      <title>Coroutines</title>
-      <link>https://nikolajaksic.com/posts/coroutines/</link>
-      <pubDate>Wed, 15 Nov 2023 00:00:00 +0000</pubDate>
+      <title>Spider Chart</title>
+      <link>https://nikolajaksic.com/posts/spider-chart/</link>
+      <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://nikolajaksic.com/posts/coroutines/</guid>
-      <description>Let&amp;rsquo;s check if this summary works</description>
+      <guid>https://nikolajaksic.com/posts/spider-chart/</guid>
+      <description>An Android library that makes it easy to visualize your data.</description>
+    </item>
+    
+    <item>
+      <title>Instagram Auth</title>
+      <link>https://nikolajaksic.com/posts/instagram-auth/</link>
+      <pubDate>Sun, 22 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://nikolajaksic.com/posts/instagram-auth/</guid>
+      <description>An Android library that makes it easy to authenticate your app users with Instagram.</description>
     </item>
     
   </channel>

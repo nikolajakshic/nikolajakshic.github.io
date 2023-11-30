@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <title>Coroutines | Nikola Jakšić</title>
+    <title>Coroutines Cheat Sheet | Nikola Jakšić</title>
 
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
 <meta name="viewport" content="width=device-width,minimum-scale=1">
-<meta name="description" content="A brief guide to setup KaTeX">
+<meta name="description" content="How to use some of the most common coroutine builders and operators, and how to handle errors and cancellation.">
 <meta name="generator" content="Hugo 0.91.0" />
 
 
@@ -45,10 +45,10 @@
       
 
 <section id="single">
-    <h1 class="title">Coroutines</h1>
+    <h1 class="title">Coroutines Cheat Sheet</h1>
 
     <div class="tip">
-        <time datetime="2023-11-15 00:00:00 &#43;0000 UTC">Nov 15, 2023</time>
+        <time datetime="2023-10-08 00:00:00 &#43;0000 UTC">Oct 8, 2023</time>
         <span class="split">
           ·
         </span>
@@ -72,127 +72,127 @@
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#a2f;font-weight:bold">val</span> scope = CoroutineScope(Dispatchers.Main + Job())
 
 scope.launch { <span style="color:#080;font-style:italic">// the first child 
-</span><span style="color:#080;font-style:italic"></span>  <span style="color:#a2f;font-weight:bold">throw</span> Exception()
+</span><span style="color:#080;font-style:italic"></span>    <span style="color:#a2f;font-weight:bold">throw</span> Exception()
 }
 scope.launch { <span style="color:#080;font-style:italic">// the second child 
-</span><span style="color:#080;font-style:italic"></span>  <span style="color:#080;font-style:italic">// canceled by the failure of the first child
+</span><span style="color:#080;font-style:italic"></span>    <span style="color:#080;font-style:italic">// canceled by the failure of the first child
 </span><span style="color:#080;font-style:italic"></span>}
 </code></pre></div><h3 id="supervisorjob2"><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-supervisor-job.html" target="_blank" rel="noopener">SupervisorJob</a> <a href="#supervisorjob2" class="anchor">🔗</a></h3><p>A failure of a child does not cause the <code>SupervisorJob</code> to fail and does not affect its other children.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#a2f;font-weight:bold">val</span> scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
 scope.launch { <span style="color:#080;font-style:italic">// the first child 
-</span><span style="color:#080;font-style:italic"></span>  <span style="color:#a2f;font-weight:bold">throw</span> Exception()
+</span><span style="color:#080;font-style:italic"></span>    <span style="color:#a2f;font-weight:bold">throw</span> Exception()
 }
 scope.launch { <span style="color:#080;font-style:italic">// the second child
-</span><span style="color:#080;font-style:italic"></span>  <span style="color:#080;font-style:italic">// NOT canceled by the failure of the first child
+</span><span style="color:#080;font-style:italic"></span>    <span style="color:#080;font-style:italic">// NOT canceled by the failure of the first child
 </span><span style="color:#080;font-style:italic"></span>}
 </code></pre></div><h3 id="coroutinescope3"><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html" target="_blank" rel="noopener">coroutineScope</a> <a href="#coroutinescope3" class="anchor">🔗</a></h3><p>A failure of a scope cancels all its children.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin">coroutineScope {
-  <span style="color:#a2f;font-weight:bold">val</span> child = async {
-    <span style="color:#080;font-style:italic">// canceled by the failure of the scope
-</span><span style="color:#080;font-style:italic"></span>  }
-  <span style="color:#a2f;font-weight:bold">throw</span> Exception()
+    <span style="color:#a2f;font-weight:bold">val</span> child = async {
+        <span style="color:#080;font-style:italic">// canceled by the failure of the scope
+</span><span style="color:#080;font-style:italic"></span>    }
+    <span style="color:#a2f;font-weight:bold">throw</span> Exception()
 }
 </code></pre></div><p>A failure of any child causes the scope to fail and the rest of the children are canceled.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin">coroutineScope {
-  <span style="color:#a2f;font-weight:bold">val</span> child1 = async {
-    <span style="color:#a2f;font-weight:bold">throw</span> Exception()
-  }
-  <span style="color:#a2f;font-weight:bold">val</span> child2 = async {
-    <span style="color:#080;font-style:italic">// canceled by the failure of the first child
-</span><span style="color:#080;font-style:italic"></span>  }
-  child1.await()
+    <span style="color:#a2f;font-weight:bold">val</span> child1 = async {
+        <span style="color:#a2f;font-weight:bold">throw</span> Exception()
+    }
+    <span style="color:#a2f;font-weight:bold">val</span> child2 = async {
+        <span style="color:#080;font-style:italic">// canceled by the failure of the first child
+</span><span style="color:#080;font-style:italic"></span>    }
+    child1.await()
 }
 </code></pre></div><p>Since the failure of a child causes the scope itself to fail, using try-catch on a child will <strong>NOT</strong> work.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin">coroutineScope {
-  <span style="color:#a2f;font-weight:bold">try</span> {
-    <span style="color:#a2f;font-weight:bold">val</span> child = async { <span style="color:#a2f;font-weight:bold">throw</span> Exception() }.await()
-  } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
-    <span style="color:#080;font-style:italic">// coroutineScope rethrows the exception
-</span><span style="color:#080;font-style:italic"></span>  }
+    <span style="color:#a2f;font-weight:bold">try</span> {
+        <span style="color:#a2f;font-weight:bold">val</span> child = async { <span style="color:#a2f;font-weight:bold">throw</span> Exception() }.await()
+    } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
+        <span style="color:#080;font-style:italic">// coroutineScope rethrows the exception
+</span><span style="color:#080;font-style:italic"></span>    }
 }
 </code></pre></div><p>Exception thrown by a child is rethrown by the <code>coroutineScope</code> and can be handled from the outer scope.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#a2f;font-weight:bold">suspend</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">someFunction</span>() = coroutineScope {
-  <span style="color:#a2f;font-weight:bold">val</span> child = async { <span style="color:#a2f;font-weight:bold">throw</span>  Exception() }.await()
+    <span style="color:#a2f;font-weight:bold">val</span> child = async { <span style="color:#a2f;font-weight:bold">throw</span>  Exception() }.await()
 }
 
 <span style="color:#a2f;font-weight:bold">val</span> scope = CoroutineScope(Dispatchers.Main + Job())
 
 scope.launch {
-  <span style="color:#a2f;font-weight:bold">try</span> {
-    someFunction()
-  } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
-    <span style="color:#080;font-style:italic">// exception successfully caught
-</span><span style="color:#080;font-style:italic"></span>  }
+    <span style="color:#a2f;font-weight:bold">try</span> {
+        someFunction()
+    } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
+        <span style="color:#080;font-style:italic">// exception successfully caught
+</span><span style="color:#080;font-style:italic"></span>    }
 }
 </code></pre></div><h3 id="supervisorscope4"><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/supervisor-scope.html" target="_blank" rel="noopener">supervisorScope</a> <a href="#supervisorscope4" class="anchor">🔗</a></h3><p>A failure of a scope cancels all its children.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin">supervisorScope {
-  <span style="color:#a2f;font-weight:bold">val</span> child = async {
-    <span style="color:#080;font-style:italic">// canceled by the failure of the scope
-</span><span style="color:#080;font-style:italic"></span>  }
-  <span style="color:#a2f;font-weight:bold">throw</span> Exception()
+    <span style="color:#a2f;font-weight:bold">val</span> child = async {
+        <span style="color:#080;font-style:italic">// canceled by the failure of the scope
+</span><span style="color:#080;font-style:italic"></span>    }
+    <span style="color:#a2f;font-weight:bold">throw</span> Exception()
 }
 </code></pre></div><p>A failure of a child does not cause the scope to fail and does not affect its other children.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin">supervisorScope {
-  <span style="color:#a2f;font-weight:bold">val</span> child1 = async {
-    <span style="color:#a2f;font-weight:bold">throw</span> Exception()
-  }
-  <span style="color:#a2f;font-weight:bold">val</span> child2 = async {
-    <span style="color:#080;font-style:italic">// NOT canceled by the failure of the first child
-</span><span style="color:#080;font-style:italic"></span>  }
-  <span style="color:#a2f;font-weight:bold">try</span> {
-    child1.await()
-  } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
-    <span style="color:#080;font-style:italic">// exception successfully caught
-</span><span style="color:#080;font-style:italic"></span>  }
+    <span style="color:#a2f;font-weight:bold">val</span> child1 = async {
+        <span style="color:#a2f;font-weight:bold">throw</span> Exception()
+    }
+    <span style="color:#a2f;font-weight:bold">val</span> child2 = async {
+        <span style="color:#080;font-style:italic">// NOT canceled by the failure of the first child
+</span><span style="color:#080;font-style:italic"></span>    }
+    <span style="color:#a2f;font-weight:bold">try</span> {
+        child1.await()
+    } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
+        <span style="color:#080;font-style:italic">// exception successfully caught
+</span><span style="color:#080;font-style:italic"></span>    }
 }
 </code></pre></div><p>Exception thrown by the <code>supervisorScope</code> can be handled from the outer scope.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#a2f;font-weight:bold">suspend</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">someFunction</span>() = supervisorScope {
-  <span style="color:#a2f;font-weight:bold">val</span> child = async { <span style="color:#a2f;font-weight:bold">throw</span>  Exception() }.await()
+    <span style="color:#a2f;font-weight:bold">val</span> child = async { <span style="color:#a2f;font-weight:bold">throw</span>  Exception() }.await()
 }
 
 <span style="color:#a2f;font-weight:bold">val</span> scope = CoroutineScope(Dispatchers.Main + Job())
 
 scope.launch {
-  <span style="color:#a2f;font-weight:bold">try</span> {
-    someFunction()
-  } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
-    <span style="color:#080;font-style:italic">// exception successfully caught
-</span><span style="color:#080;font-style:italic"></span>  }
+    <span style="color:#a2f;font-weight:bold">try</span> {
+        someFunction()
+    } <span style="color:#a2f;font-weight:bold">catch</span> (e: Exception) {
+        <span style="color:#080;font-style:italic">// exception successfully caught
+</span><span style="color:#080;font-style:italic"></span>    }
 }
 </code></pre></div><h3 id="suspendcoroutine5"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines/suspend-coroutine.html" target="_blank" rel="noopener">suspendCoroutine</a> <a href="#suspendcoroutine5" class="anchor">🔗</a></h3><p>Suspends currently running coroutine. Provided <code>continuation</code> has two functions: <code>resume</code> and <code>resumeWithException</code>,
 calling either function will cause <code>suspendCoroutine</code> to resume immediately. Typically used to convert callback-based
 APIs to suspend functions.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#a2f;font-weight:bold">suspend</span> <span style="color:#a2f;font-weight:bold">fun</span> &lt;<span style="color:#00f">T</span>&gt; <span style="color:#00a000">Call</span>&lt;T&gt;.await(): T {
-  <span style="color:#a2f;font-weight:bold">return</span> suspendCoroutine { continuation <span style="color:#666">-&gt;</span>
-    <span style="color:#a2f;font-weight:bold">this</span>.enqueue(<span style="color:#a2f;font-weight:bold">object</span> <span style="">: </span><span style="color:#00f">Callback</span>&lt;T&gt; {
-      <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onResponse</span>(call: Call&lt;T&gt;, response: Response&lt;T&gt;) {
-        continuation.resume(response.body()<span style="color:#666">!!</span>)
-      }
+    <span style="color:#a2f;font-weight:bold">return</span> suspendCoroutine { continuation <span style="color:#666">-&gt;</span>
+        <span style="color:#a2f;font-weight:bold">this</span>.enqueue(<span style="color:#a2f;font-weight:bold">object</span> <span style="">: </span><span style="color:#00f">Callback</span>&lt;T&gt; {
+            <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onResponse</span>(call: Call&lt;T&gt;, response: Response&lt;T&gt;) {
+                continuation.resume(response.body()<span style="color:#666">!!</span>)
+            }
 
-      <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onFailure</span>(call: Call&lt;T&gt;, t: Throwable) {
-        continuation.resumeWithException(t)
-      }
-    })
-  }
+            <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onFailure</span>(call: Call&lt;T&gt;, t: Throwable) {
+                continuation.resumeWithException(t)
+            }
+        })
+    }
 }
 </code></pre></div><h3 id="suspendcancellablecoroutine6"><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/suspend-cancellable-coroutine.html" target="_blank" rel="noopener">suspendCancellableCoroutine</a> <a href="#suspendcancellablecoroutine6" class="anchor">🔗</a></h3><p>Works similarly to <code>suspendCoroutine</code> but supports cancellation.</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#a2f;font-weight:bold">suspend</span> <span style="color:#a2f;font-weight:bold">fun</span> &lt;<span style="color:#00f">T</span>&gt; <span style="color:#00a000">Call</span>&lt;T&gt;.await(): T {
-  <span style="color:#a2f;font-weight:bold">return</span> suspendCancellableCoroutine { continuation <span style="color:#666">-&gt;</span>
-    <span style="color:#a2f;font-weight:bold">this</span>.enqueue(<span style="color:#a2f;font-weight:bold">object</span> <span style="">: </span><span style="color:#00f">Callback</span>&lt;T&gt; {
-      <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onResponse</span>(call: Call&lt;T&gt;, response: Response&lt;T&gt;) {
-        continuation.resume(response.body()<span style="color:#666">!!</span>)
-      }
+    <span style="color:#a2f;font-weight:bold">return</span> suspendCancellableCoroutine { continuation <span style="color:#666">-&gt;</span>
+        <span style="color:#a2f;font-weight:bold">this</span>.enqueue(<span style="color:#a2f;font-weight:bold">object</span> <span style="">: </span><span style="color:#00f">Callback</span>&lt;T&gt; {
+            <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onResponse</span>(call: Call&lt;T&gt;, response: Response&lt;T&gt;) {
+                continuation.resume(response.body()<span style="color:#666">!!</span>)
+            }
 
-      <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onFailure</span>(call: Call&lt;T&gt;, t: Throwable) {
-        continuation.resumeWithException(t)
-      }
-    })
+            <span style="color:#a2f;font-weight:bold">override</span> <span style="color:#a2f;font-weight:bold">fun</span> <span style="color:#00a000">onFailure</span>(call: Call&lt;T&gt;, t: Throwable) {
+                continuation.resumeWithException(t)
+            }
+        })
 
-    continuation.invokeOnCancellation {
-      <span style="color:#a2f;font-weight:bold">this</span>.cancel()
+        continuation.invokeOnCancellation {
+            <span style="color:#a2f;font-weight:bold">this</span>.cancel()
+        }
     }
-  }
 }
 </code></pre></div><h3 id="channel7"><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/-channel/index.html" target="_blank" rel="noopener">Channel</a> <a href="#channel7" class="anchor">🔗</a></h3><p>Hot stream: The data is being produced regardless of the presence of subscriber.</p>
 <h3 id="flow8"><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/index.html" target="_blank" rel="noopener">Flow</a> <a href="#flow8" class="anchor">🔗</a></h3><p>Cold stream</p>
